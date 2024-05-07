@@ -1,19 +1,27 @@
 #define sensor 10
 #define led 7
 
+#include <DHT.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "RTClib.h"
 
 RTC_DS1307 rtc;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+//Khai bao Cam bien nhiet do, do am
+const int DHTPIN = 4; // Đọc dữ liệu từ DHT11 ở chân 4 trên mạch Arduino
+const int DHTTYPE = DHT11; // Khai báo loại cảm biến, có 2 loại là DHT11 và DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
 
 volatile int but_set_module = 2, type_module = 0;  //0:auto(default) 1:manual
 volatile int but_format_time = 3, type_time = 0; // 0:24h(default) 1:12h am-pm
 int ButUp = 1;
 int ButDown = 0;
+
 void setup() {
   Serial.begin(9600);
+  dht.begin();// bật cảm biến
   lcd.init(); // thiết lập các cài đặt cho màn hình LCD
   lcd.backlight(); // bật đèn nền
   if(!rtc.begin()){
@@ -103,7 +111,24 @@ void AutoModule(){
 void ManualModule(){
   //code here
 }
+//Hiển thị nhiệt độ, độ ẩm
+void DisplayTemperatureAndHumidity(){
+float temperature = dht.readTemperature(); // Đọc nhiệt độ C từ cảm biến
+float temperatureF = dht.readTemperature(true); // Đọc nhiệt độ F từ cảm biến
+float humidity = dht.readHumidity(); // Đọc độ ẩm từ cảm biến
+delay(1000);
+//Hiển thị lên màn hình
+lcd.setCursor(2, 1);
+lcd.print(temperature, 0);//Hiển thị nhiệt độ sau dấu phẩy 1 số
+lcd.setCursor(6, 1);
+lcd.print("C");
+lcd.setCursor(8, 1);
+lcd.print(temperature);//Hiển thị độ ẩm
+lcd.setCursor(11, 1);
+lcd.print("%");
+}
 void loop() {
+
   // put your main code here, to run repeatedly:
   if(type_module == 0){
     AutoModule();
