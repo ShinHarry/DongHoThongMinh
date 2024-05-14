@@ -108,25 +108,7 @@ void AutoModule(){
 
 }
 
-void ManualModule(){
-  //code here
-}
-//Hiển thị nhiệt độ, độ ẩm
-void DisplayTemperatureAndHumidity(){
-float temperature = dht.readTemperature(); // Đọc nhiệt độ C từ cảm biến
-float temperatureF = dht.readTemperature(true); // Đọc nhiệt độ F từ cảm biến
-float humidity = dht.readHumidity(); // Đọc độ ẩm từ cảm biến
-delay(1000);
-//Hiển thị lên màn hình
-lcd.setCursor(2, 1);
-lcd.print(temperature, 0);//Hiển thị nhiệt độ sau dấu phẩy 1 số
-lcd.setCursor(6, 1);
-lcd.print("C");
-lcd.setCursor(8, 1);
-lcd.print(temperature);//Hiển thị độ ẩm
-lcd.setCursor(11, 1);
-lcd.print("%");
-}
+
 void loop() {
 
   // put your main code here, to run repeatedly:
